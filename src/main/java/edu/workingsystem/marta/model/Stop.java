@@ -1,4 +1,4 @@
-package edu.workingsystem.marta;
+package edu.workingsystem.marta.model;
 
 import java.util.HashMap;
 

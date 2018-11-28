@@ -1,20 +1,20 @@
-package edu.workingsystem.marta;
+package edu.workingsystem.marta.service;
+
+import edu.workingsystem.marta.model.*;
+import edu.workingsystem.marta.util.EventComparator;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class DiscreteEventSimulator {
 	
 	static MassTransitSystem transitSystem=new MassTransitSystem();
-	static Comparator comp=new  EventComparator();
+	static Comparator comp=new EventComparator();
 	//static List<Event> eventList=new ArrayList<Event>();
 	static PriorityQueue<Event> eventQueue = new PriorityQueue(50, comp);
 

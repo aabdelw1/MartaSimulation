@@ -1,4 +1,6 @@
-package edu.workingsystem.marta;
+package edu.workingsystem.marta.util;
+import edu.workingsystem.marta.model.Event;
+
 import java.util.Comparator;
 
 public class EventComparator implements Comparator<Event>{
