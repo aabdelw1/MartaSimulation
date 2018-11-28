@@ -78,7 +78,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>edu.workingsystem.marta.service.DiscreteEventSimulator</mainClass>
+                            <mainClass>edu.workingsystem.marta.model.DiscreteEventSimulator</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
