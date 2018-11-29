@@ -78,7 +78,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>edu.workingsystem.marta.model.DiscreteEventSimulator</mainClass>
+                            <mainClass>edu.workingsystem.marta.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -91,7 +91,13 @@
                         </goals>
                     </execution>
                 </executions>
-
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>

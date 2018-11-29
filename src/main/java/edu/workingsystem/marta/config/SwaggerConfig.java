@@ -32,7 +32,7 @@ public class SwaggerConfig {
      * @return
      */
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Spring Boot Application")
+        return new ApiInfoBuilder().title("Spring Boot edu.workingsystem.marta.Application")
                 .description("Spring Boot REST API").version("0.0.1-SNAPSHOT").termsOfServiceUrl("")
                 .license("").licenseUrl("").build();
     }
