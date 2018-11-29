@@ -13,6 +13,14 @@ public class EventSimService {
     }
 
     public String startSim(String scenarioFilePath, String probabilityFilePath) {
-        return "";
+        return this.discreteEventSimulator.startSim(scenarioFilePath, probabilityFilePath);
+    }
+
+    public String processEvent() {
+        return this.discreteEventSimulator.moveBus();
+    }
+
+    public String rewind() {
+        return this.discreteEventSimulator.rewind();
     }
 }

@@ -17,9 +17,9 @@ public interface EventSimController {
     @RequestMapping(value = "/start", method = RequestMethod.GET)
     ResponseEntity<String> startSim(String scenarioFilePath, String probabilityFilePath);
 
-    @ApiOperation(value = "Update the simulation files after the simulation has started", response = String.class)
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    ResponseEntity<String> updateSim(String scenarioFilePath, String probabilityFilePath);
+//    @ApiOperation(value = "Update the simulation files after the simulation has started", response = String.class)
+//    @RequestMapping(value = "/update", method = RequestMethod.GET)
+//    ResponseEntity<String> updateSim(String scenarioFilePath, String probabilityFilePath);
 
     @ApiOperation(value = "Process the next event in the simulation", response = String.class)
     @RequestMapping(value = "/processEvent", method = RequestMethod.GET)
@@ -31,7 +31,7 @@ public interface EventSimController {
 
     @ApiOperation(value = "Reset the simulation", response = String.class)
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
-    ResponseEntity<String> reset();
+    ResponseEntity<String> reset(String scenarioFilePath, String probabilityFilePath);
 
 
 }

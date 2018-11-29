@@ -152,10 +152,16 @@ public class DiscreteEventSimulator {
                     eventQueue.add(new Event(nextArrivalTime.intValue(), "move_bus", event.getEventId().intValue()));
 
 //                        System.out.println("b:" + activeBus.getBusId() + "->s:" + nextStop.getStopId() + "@"+ activeBus.getArrivalTime() + "//p:0/f:0");
+
                     result = "b:" + activeBus.getBusId() + "->s:" + nextStop.getStopId() + "@"+ activeBus.getArrivalTime() + "//p:0/f:0";
+                    LOGGER.info(result);
                     //Collections.sort(eventQueue2, comp);
                 }
             }
         return result;
+    }
+
+    public String rewind() {
+        return null;
     }
 }

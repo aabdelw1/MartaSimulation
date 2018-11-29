@@ -12,10 +12,10 @@ public class Stop {
 	public Double longi;
 	private Integer waiting=RandomGeneratorUtil.getRandomRidersArrive();
 	private Integer transfer;
-	 private HashMap<Integer, int[]> boardingBusrate;
-	 private HashMap<Integer, int[]> passengerLeaveRate;
-	
-	
+	private HashMap<Integer, int[]> boardingBusrate;
+	private HashMap<Integer, int[]> passengerLeaveRate;
+
+
 	public Integer getStopId() {
 		return stopId;
 	}
@@ -46,7 +46,7 @@ public class Stop {
 	public void setLongi(Double longi) {
 		this.longi = longi;
 	}
-	
+
 	public Integer getWaiting() {
 		return waiting;
 	}
@@ -67,7 +67,7 @@ public class Stop {
 		this.lat = lat;
 		this.longi = longi;
 		this.waiting =numberOfPassengers ;
-		
+
 	}
 
 	public Double findDistance(Stop destination) {
@@ -76,9 +76,9 @@ public class Stop {
 						+ Math.pow(this.longi.doubleValue() - destination.getLongi().doubleValue(), 2.0D)));
 		return distanceBetweenStops;
 	}
-	
+
 	public Integer exchangeRiders(int rank, int initialPassengerCount, int capacity) {
-		
+
 		//Get the random number to get the passenger leave from the bus
 		int leavingBus = RandomGeneratorUtil.getRandomRidersOff();
 		int updatedPassengerCount = Math.max(0, initialPassengerCount - leavingBus);
@@ -98,5 +98,5 @@ public class Stop {
 		int finalPassengerCount = updatedPassengerCount + ableToBoard;
 		return Integer.valueOf(finalPassengerCount - initialPassengerCount);
 	}
-	
+
 }

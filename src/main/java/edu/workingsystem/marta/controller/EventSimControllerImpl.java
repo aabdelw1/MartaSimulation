@@ -14,7 +14,6 @@ public class EventSimControllerImpl implements EventSimController {
         this.eventSimService = eventSimService;
     }
 
-
     @Override
     public ResponseEntity<String> startSim(String scenarioFilePath, String probabilityFilePath) {
         String s = this.eventSimService.startSim(scenarioFilePath, probabilityFilePath);
@@ -23,22 +22,21 @@ public class EventSimControllerImpl implements EventSimController {
     }
 
     @Override
-    public ResponseEntity<String> updateSim(String scenarioFilePath, String probabilityFilePath) {
-        return null;
-    }
-
-    @Override
     public ResponseEntity<String> processNextEvent() {
-        return null;
+        String s = this.eventSimService.processEvent();
+        ResponseEntity<String> response = new ResponseEntity(s, HttpStatus.OK);
+        return response;
     }
 
     @Override
     public ResponseEntity<String> rewindLastEvent() {
-        return null;
+        String s = this.eventSimService.rewind();
+        ResponseEntity<String> response = new ResponseEntity(s, HttpStatus.OK);
+        return response;
     }
 
     @Override
-    public ResponseEntity<String> reset() {
-        return null;
+    public ResponseEntity<String> reset(String scenarioFilePath, String probabilityFilePath) {
+        return startSim(scenarioFilePath, probabilityFilePath);
     }
 }
