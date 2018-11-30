@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Route {
-	public Integer routeId;
-	public Integer routeNumber;
-	public String routeName;
-	public List<Integer> stopsList=new ArrayList<Integer>();
+	private Integer routeId;
+	private Integer routeNumber;
+	private String routeName;
+	private List<Integer> stopsList = new ArrayList<Integer>();
 	
 	public Integer getRouteId() {
 		return routeId;

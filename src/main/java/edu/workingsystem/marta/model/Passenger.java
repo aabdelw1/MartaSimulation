@@ -2,11 +2,11 @@ package edu.workingsystem.marta.model;
 
 public class Passenger {
 	
-	public Integer passengerId;
-	public String name;
-	public Integer startStopId;
-	public Integer endStopId;
-	public Integer busId;
+	private Integer passengerId;
+	private String name;
+	private Integer startStopId;
+	private Integer endStopId;
+	private Integer busId;
 	
 	public Integer getPassengerId() {
 		return passengerId;

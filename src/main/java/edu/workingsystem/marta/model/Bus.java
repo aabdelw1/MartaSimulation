@@ -2,18 +2,18 @@ package edu.workingsystem.marta.model;
 
 public class Bus {
 	
-	public Integer busId;
-	public Integer routeId;
-	public Integer currentLocation;
-	public Integer nextLocation;
-	public Integer currentPassengerCount;
-	public Integer maxPassengerCount;
-	public Integer speed;
-	public Integer currentLatLong;
-	public Integer nextLatLong;
-	public Integer arrivalTime;
-	public Integer fuelCapacity;
-	public Integer currentFuel;
+	private Integer busId;
+	private Integer routeId;
+	private Integer currentLocation;
+	private Integer nextLocation;
+	private Integer currentPassengerCount;
+	private Integer maxPassengerCount;
+	private Integer speed;
+	private Integer currentLatLong;
+	private Integer nextLatLong;
+	private Integer arrivalTime;
+	private Integer fuelCapacity;
+	private Integer currentFuel;
 	
 
 

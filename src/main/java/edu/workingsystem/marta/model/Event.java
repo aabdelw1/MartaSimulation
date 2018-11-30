@@ -2,9 +2,9 @@ package edu.workingsystem.marta.model;
 
 public class Event {
 	
-	public Integer eventRank;
-	public String event_type;
-	public Integer eventId;
+	private Integer eventRank;
+	private String event_type;
+	private Integer eventId;
 	
 	
 	public Event(Integer eventRank, String event_type, Integer eventId) {
