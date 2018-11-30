@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class DiscreteEventSimulator {
@@ -94,14 +95,55 @@ public class DiscreteEventSimulator {
                 }
 
             }
-            // Move run the first move bus event and get the result
-            result = moveBus();
 
         } catch (FileNotFoundException e) {
             LOGGER.error("Scenario file not found", e);
         } catch (IOException e) {
             LOGGER.error("Scenario file I/O exception", e);
         }
+
+        File file2 = new File(probabilityFilePath);
+        try {
+            BufferedReader br2 = new BufferedReader(new FileReader(file2));
+            String st;
+
+            while ((st = br2.readLine()) != null) {
+
+                String[] output = st.split("\\,");
+                String stopid = output[0];
+
+                HashMap<Integer,Stop> stops = this.transitSystem.getStops();
+
+                if(null!=stopid) {
+                    if (stops.containsKey(stopid)){
+                        Stop stop = stops.get(stopid);
+                        Integer ridersArriveHigh = Integer.parseInt(output[1]);
+                        Integer ridersArriveLow = Integer.parseInt(output[2]);
+                        Integer ridersOffHigh = Integer.parseInt(output[3]);
+                        Integer ridersOffLow = Integer.parseInt(output[4]);
+                        Integer ridersOnHigh = Integer.parseInt(output[5]);
+                        Integer ridersOnLow = Integer.parseInt(output[6]);
+
+                        stop.setRidersArriveHigh(ridersArriveHigh);
+                        stop.setRidersArriveLow(ridersArriveLow);
+                        stop.setRidersOffHigh(ridersOffHigh);
+                        stop.setRidersOffLow(ridersOffLow);
+                        stop.setRidersOnHigh(ridersOnHigh);
+                        stop.setRidersOnLow(ridersOnLow);
+                    } else {
+                        LOGGER.info("Stop id: " + stopid + " not found in this scenario");
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Scenario file not found", e);
+        } catch (IOException e) {
+            LOGGER.error("Scenario file I/O exception", e);
+        }
+
+        // Move run the first move bus event and get the result
+        result = moveBus();
+
         return result;
     }
 
@@ -126,7 +168,6 @@ public class DiscreteEventSimulator {
                     int currentPassengers = activeBus.getCurrentPassengerCount().intValue();
                     int passengerDifferential = currentStop.exchangeRiders(event.getEventRank().intValue(), currentPassengers, activeBus.getMaxPassengerCount().intValue()).intValue();
 
-//                    System.out.println(" passengers before reaching stop: " + Integer.toString(currentPassengers) + "passengers after reaching stop: " + (currentPassengers + passengerDifferential));
                     LOGGER.debug("Passengers before reaching stop: " + currentPassengers + "passengers after reaching stop: " + (currentPassengers + passengerDifferential));
 
                     activeBus.adjustPassengers(passengerDifferential);
@@ -138,7 +179,6 @@ public class DiscreteEventSimulator {
                     // Distance
                     Double pathDistance = currentStop.findDistance(nextStop);
                     int travelTime = 1 + pathDistance.intValue() * 60 / activeBus.getSpeed().intValue();
-                    //currentLocation=busRoute.getStopsList().indexOf(currentStop);
                     if(currentLocation<busRoute.getStopsList().size()-1) {
                         activeBus.setCurrentLocation(currentLocation+1);
                     }else {
@@ -151,14 +191,10 @@ public class DiscreteEventSimulator {
                     eventQueue.remove(event);
                     transitSystem.getBuses().remove(busId);
                     transitSystem.getBuses().put(busId, activeBus);
-                    //i--;
                     eventQueue.add(new Event(nextArrivalTime.intValue(), "move_bus", event.getEventId().intValue()));
-
-//                        System.out.println("b:" + activeBus.getBusId() + "->s:" + nextStop.getStopId() + "@"+ activeBus.getArrivalTime() + "//p:0/f:0");
 
                     result = "b:" + activeBus.getBusId() + "->s:" + nextStop.getStopId() + "@"+ activeBus.getArrivalTime() + "//p:0/f:0";
                     LOGGER.info(result);
-                    //Collections.sort(eventQueue2, comp);
                 }
             }
         return result;

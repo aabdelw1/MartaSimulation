@@ -10,25 +10,19 @@ public final class RandomGeneratorUtil {
 	}
 
 	public static Random randGenerator = new Random();
-	public static Integer ridersArriveHigh = 10;
-	public static Integer ridersArriveLow = 1;
-	public static Integer ridersOffHigh = 10;
-	public static Integer ridersOffLow = 1;
-	public static Integer ridersOnHigh = 10;
-	public static Integer ridersOnLow = 1;
 
-	public static Integer getRandomRidersArrive() {
+	public static Integer getRandomRidersArrive(int ridersArriveLow, int ridersArriveHigh) {
 		Integer randomArrive = ridersArriveLow + randGenerator.nextInt(ridersArriveHigh);
 		return randomArrive;
 	}
 
-	public static Integer getRandomRidersOff() {
+	public static Integer getRandomRidersOff(int ridersOffLow, int ridersOffHigh) {
 		Integer randomOff = ridersOffLow + randGenerator.nextInt(ridersOffHigh);
 		return randomOff;
 
 	}
 
-	public static Integer getRandomRidersOn() {
+	public static Integer getRandomRidersOn(int ridersOnLow, int ridersOnHigh) {
 		Integer randomOn = ridersOnLow + randGenerator.nextInt(ridersOnHigh);
 		return randomOn;
 
