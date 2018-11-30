@@ -125,7 +125,10 @@ public class DiscreteEventSimulator {
                     Stop currentStop = transitSystem.getStops().get(currentStopId);
                     int currentPassengers = activeBus.getCurrentPassengerCount().intValue();
                     int passengerDifferential = currentStop.exchangeRiders(event.getEventRank().intValue(), currentPassengers, activeBus.getMaxPassengerCount().intValue()).intValue();
-                    System.out.println(" passengers before reaching stop: " + Integer.toString(currentPassengers) + "passengers after reaching stop: " + (currentPassengers + passengerDifferential));
+
+//                    System.out.println(" passengers before reaching stop: " + Integer.toString(currentPassengers) + "passengers after reaching stop: " + (currentPassengers + passengerDifferential));
+                    LOGGER.debug("Passengers before reaching stop: " + currentPassengers + "passengers after reaching stop: " + (currentPassengers + passengerDifferential));
+
                     activeBus.adjustPassengers(passengerDifferential);
                     // Next stop of the bus
                     Integer nextStopId = busRoute.getNextStop(currentLocation);
