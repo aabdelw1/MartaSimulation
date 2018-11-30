@@ -24,7 +24,7 @@ public class DiscreteEventSimulator {
     }
 
 
-    public String startSim(String scenarioFilePath, String probabilityFilePath) {
+    public SystemStateResponse startSim(String scenarioFilePath, String probabilityFilePath) {
 
         String result = "";
 
@@ -142,12 +142,10 @@ public class DiscreteEventSimulator {
         }
 
         // Move run the first move bus event and get the result
-        result = moveBus();
-
-        return result;
+        return getCurrentState("");
     }
 
-    public String moveBus() {
+    public SystemStateResponse moveBus() {
         String result = "";
             if (eventQueue.size() > 0) {
                 Event event = (Event)eventQueue.poll();
@@ -197,10 +195,43 @@ public class DiscreteEventSimulator {
                     LOGGER.info(result);
                 }
             }
-        return result;
+        return getCurrentState(result);
     }
 
-    public String rewind() {
+    public SystemStateResponse rewind() {
         return null;
+    }
+
+    private SystemStateResponse getCurrentState(String lastEventString) {
+        HashMap<Integer, Bus> buses = this.transitSystem.getBuses();
+        HashMap<Integer, Stop> stops = this.transitSystem.getStops();
+        HashMap<Integer, Route> routes = this.transitSystem.getRoutes();
+
+        SystemStateResponse systemStateResponse = new SystemStateResponse();
+
+        // Add the stops that have buses
+        for (Bus bus: buses.values()) {
+            int routeId = bus.getRouteId();
+            int currentStop = bus.getCurrentLocation();
+            int stopId = routes.get(routeId).getCurrentStop(currentStop);
+            Stop stop = stops.remove(stopId);
+
+            StateObject state = new StateObject(stopId);
+            state.setPassengersAtStop(stop.getWaiting());
+            state.setHasBus(true);
+            state.setBusId(bus.getBusId());
+            state.setPassngersOnBus(bus.getCurrentPassengerCount());
+            systemStateResponse.addState(state);
+        }
+
+        // Add the stops without buses
+        for (Stop stop: stops.values()){
+            StateObject state = new StateObject(stop.getStopId());
+            state.setPassengersAtStop(stop.getWaiting());
+            systemStateResponse.addState(state);
+        }
+
+        systemStateResponse.setLastEventString(lastEventString);
+        return systemStateResponse;
     }
 }
