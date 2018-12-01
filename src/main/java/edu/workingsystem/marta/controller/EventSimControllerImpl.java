@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -25,10 +26,10 @@ public class EventSimControllerImpl implements EventSimController {
     }
 
     @Override
-    public ResponseEntity<String> startSim(MultipartFile scenarioFile, MultipartFile probabilityFile) {
+    public ResponseEntity<String> startSim(@RequestParam("configList") MultipartFile[] configList) {
         ResponseEntity<String> response;
         ObjectMapper objectMapper = new ObjectMapper();
-        SystemStateResponse state = this.eventSimService.startSim(scenarioFile, probabilityFile);
+        SystemStateResponse state = this.eventSimService.startSim(configList[0], configList[1]);
         String responseString = "";
         try {
            responseString = objectMapper.writeValueAsString(state);
