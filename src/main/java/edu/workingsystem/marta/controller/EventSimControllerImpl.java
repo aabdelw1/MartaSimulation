@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class EventSimControllerImpl implements EventSimController {
@@ -24,10 +25,10 @@ public class EventSimControllerImpl implements EventSimController {
     }
 
     @Override
-    public ResponseEntity<String> startSim(String scenarioFilePath, String probabilityFilePath) {
+    public ResponseEntity<String> startSim(MultipartFile scenarioFile, MultipartFile probabilityFile) {
         ResponseEntity<String> response;
         ObjectMapper objectMapper = new ObjectMapper();
-        SystemStateResponse state = this.eventSimService.startSim(scenarioFilePath, probabilityFilePath);
+        SystemStateResponse state = this.eventSimService.startSim(scenarioFile, probabilityFile);
         String responseString = "";
         try {
            responseString = objectMapper.writeValueAsString(state);
@@ -36,9 +37,9 @@ public class EventSimControllerImpl implements EventSimController {
         }
         LOGGER.info(responseString);
         if (responseString.equals("")){
-            response = new ResponseEntity(HttpStatus.CONFLICT);
+            response = new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            response = new ResponseEntity(responseString, HttpStatus.OK);
+            response = new ResponseEntity<>(responseString, HttpStatus.OK);
         }
         return response;
     }
@@ -56,9 +57,9 @@ public class EventSimControllerImpl implements EventSimController {
         }
         LOGGER.info(responseString);
         if (responseString.equals("")){
-            response = new ResponseEntity(HttpStatus.CONFLICT);
+            response = new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            response = new ResponseEntity(responseString, HttpStatus.OK);
+            response = new ResponseEntity<>(responseString, HttpStatus.OK);
         }
         return response;
     }
@@ -75,15 +76,29 @@ public class EventSimControllerImpl implements EventSimController {
             LOGGER.debug("Error processing JSON", e);
         }
         if (responseString.equals("")){
-            response = new ResponseEntity(HttpStatus.CONFLICT);
+            response = new ResponseEntity<>(HttpStatus.CONFLICT);
         } else {
-            response = new ResponseEntity(responseString, HttpStatus.OK);
+            response = new ResponseEntity<>(responseString, HttpStatus.OK);
         }
         return response;
     }
 
     @Override
-    public ResponseEntity<String> reset(String scenarioFilePath, String probabilityFilePath) {
-        return startSim(scenarioFilePath, probabilityFilePath);
+    public ResponseEntity<String> reset() {
+        ResponseEntity<String> response;
+        ObjectMapper objectMapper = new ObjectMapper();
+        SystemStateResponse state = this.eventSimService.reset();
+        String responseString = "";
+        try {
+            responseString = objectMapper.writeValueAsString(state);
+        } catch (JsonProcessingException e) {
+            LOGGER.debug("Error processing JSON", e);
+        }
+        if (responseString.equals("")){
+            response = new ResponseEntity<>(HttpStatus.CONFLICT);
+        } else {
+            response = new ResponseEntity<>(responseString, HttpStatus.OK);
+        }
+        return response;
     }
 }

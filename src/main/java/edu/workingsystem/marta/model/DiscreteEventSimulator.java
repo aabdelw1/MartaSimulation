@@ -1,9 +1,11 @@
 package edu.workingsystem.marta.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.workingsystem.marta.util.EventComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.*;
@@ -13,6 +15,8 @@ public class DiscreteEventSimulator {
     private MassTransitSystem transitSystem;
     private Comparator comp;
     private PriorityQueue<Event> eventQueue;
+    private MultipartFile configFileCopy;
+    private MultipartFile probabilityFileCopy;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscreteEventSimulator.class);
 
@@ -23,13 +27,17 @@ public class DiscreteEventSimulator {
     }
 
 
-    public SystemStateResponse startSim(String scenarioFilePath, String probabilityFilePath) {
+    public SystemStateResponse startSim(MultipartFile configFile, MultipartFile probabilityFile) {
+
+        this.configFileCopy = configFile;
+        this.probabilityFileCopy = probabilityFile;
 
         String result = "";
 
-        File file = new File(scenarioFilePath);
+
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            InputStream inputStream = configFile.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String st;
 
             while ((st = br.readLine()) != null) {
@@ -101,9 +109,10 @@ public class DiscreteEventSimulator {
             LOGGER.error("Scenario file I/O exception", e);
         }
 
-        File file2 = new File(probabilityFilePath);
+
         try {
-            BufferedReader br2 = new BufferedReader(new FileReader(file2));
+            InputStream inputStream = probabilityFile.getInputStream();
+            BufferedReader br2 = new BufferedReader(new InputStreamReader(inputStream));
             String st;
 
             while ((st = br2.readLine()) != null) {
@@ -248,5 +257,16 @@ public class DiscreteEventSimulator {
         systemStateResponse.setLastEventString(lastEventString);
 
         return systemStateResponse;
+    }
+
+    public SystemStateResponse reset() {
+        SystemStateResponse stateResponse;
+        if (this.configFileCopy != null && this.probabilityFileCopy != null) {
+            stateResponse = new SystemStateResponse();
+            stateResponse.setLastEventString("Missing Config or Probability Files");
+        } else {
+            stateResponse = startSim(this.configFileCopy, this.probabilityFileCopy);
+        }
+        return stateResponse;
     }
 }

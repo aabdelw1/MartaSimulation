@@ -3,6 +3,7 @@ package edu.workingsystem.marta.service;
 import edu.workingsystem.marta.model.DiscreteEventSimulator;
 import edu.workingsystem.marta.model.SystemStateResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EventSimService {
@@ -13,8 +14,8 @@ public class EventSimService {
         this.discreteEventSimulator = new DiscreteEventSimulator(50);
     }
 
-    public SystemStateResponse startSim(String scenarioFilePath, String probabilityFilePath) {
-        return this.discreteEventSimulator.startSim(scenarioFilePath, probabilityFilePath);
+    public SystemStateResponse startSim(MultipartFile scenarioFile, MultipartFile probabilityFile) {
+        return this.discreteEventSimulator.startSim(scenarioFile, probabilityFile);
     }
 
     public SystemStateResponse processEvent() {
@@ -23,5 +24,9 @@ public class EventSimService {
 
     public SystemStateResponse rewind() {
         return this.discreteEventSimulator.rewind();
+    }
+
+    public SystemStateResponse reset() {
+        return this.discreteEventSimulator.reset();
     }
 }
