@@ -1,13 +1,12 @@
 package edu.workingsystem.marta.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.workingsystem.marta.util.EventComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class DiscreteEventSimulator {
 
@@ -110,7 +109,9 @@ public class DiscreteEventSimulator {
             while ((st = br2.readLine()) != null) {
 
                 String[] output = st.split("\\,");
-                String stopid = output[0];
+                String stopStr = output[0];
+
+                Integer stopid = Integer.parseInt(stopStr);
 
                 HashMap<Integer,Stop> stops = this.transitSystem.getStops();
 
@@ -131,7 +132,7 @@ public class DiscreteEventSimulator {
                         stop.setRidersOnHigh(ridersOnHigh);
                         stop.setRidersOnLow(ridersOnLow);
                     } else {
-                        LOGGER.info("Stop id: " + stopid + " not found in this scenario");
+                        LOGGER.debug("Stop id: " + stopid + " not found in this scenario");
                     }
                 }
             }
@@ -163,6 +164,8 @@ public class DiscreteEventSimulator {
                     Integer currentStopId = busRoute.getCurrentStop(currentLocation);
 
                     Stop currentStop = transitSystem.getStops().get(currentStopId);
+                    LOGGER.debug("Current Stop:");
+                    LOGGER.debug(currentStop + "");
                     int currentPassengers = activeBus.getCurrentPassengerCount().intValue();
                     int passengerDifferential = currentStop.exchangeRiders(event.getEventRank().intValue(), currentPassengers, activeBus.getMaxPassengerCount().intValue()).intValue();
 
@@ -203,9 +206,11 @@ public class DiscreteEventSimulator {
     }
 
     private SystemStateResponse getCurrentState(String lastEventString) {
-        HashMap<Integer, Bus> buses = this.transitSystem.getBuses();
-        HashMap<Integer, Stop> stops = this.transitSystem.getStops();
-        HashMap<Integer, Route> routes = this.transitSystem.getRoutes();
+        Map<Integer, Bus> buses = new HashMap<>(this.transitSystem.getBuses());
+        Map<Integer, Stop> stops = new HashMap<>(this.transitSystem.getStops());
+        Map<Integer, Route> routes = new HashMap<>(this.transitSystem.getRoutes());
+
+        Set stopsWithBus = new HashSet();
 
         SystemStateResponse systemStateResponse = new SystemStateResponse();
 
@@ -214,24 +219,34 @@ public class DiscreteEventSimulator {
             int routeId = bus.getRouteId();
             int currentStop = bus.getCurrentLocation();
             int stopId = routes.get(routeId).getCurrentStop(currentStop);
-            Stop stop = stops.remove(stopId);
+            Stop stop = stops.get(stopId);
+
+            stopsWithBus.add(stopId);
 
             StateObject state = new StateObject(stopId);
-            state.setPassengersAtStop(stop.getWaiting());
+            if (null!=stop.getWaiting()) {
+                state.setPassengersAtStop(stop.getWaiting());
+            } else {
+                state.setPassengersAtStop(0);
+            }
             state.setHasBus(true);
             state.setBusId(bus.getBusId());
             state.setPassngersOnBus(bus.getCurrentPassengerCount());
+            state.setPassengerCapacity(bus.getMaxPassengerCount());
             systemStateResponse.addState(state);
         }
 
         // Add the stops without buses
         for (Stop stop: stops.values()){
-            StateObject state = new StateObject(stop.getStopId());
-            state.setPassengersAtStop(stop.getWaiting());
-            systemStateResponse.addState(state);
+            if (!stopsWithBus.contains(stop.getStopId())) {
+                StateObject state = new StateObject(stop.getStopId());
+                state.setPassengersAtStop(stop.getWaiting());
+                systemStateResponse.addState(state);
+            }
         }
 
         systemStateResponse.setLastEventString(lastEventString);
+
         return systemStateResponse;
     }
 }

@@ -34,6 +34,7 @@ public class EventSimControllerImpl implements EventSimController {
         } catch (JsonProcessingException e) {
             LOGGER.debug("Error processing JSON", e);
         }
+        LOGGER.info(responseString);
         if (responseString.equals("")){
             response = new ResponseEntity(HttpStatus.CONFLICT);
         } else {
@@ -53,6 +54,7 @@ public class EventSimControllerImpl implements EventSimController {
         } catch (JsonProcessingException e) {
             LOGGER.debug("Error processing JSON", e);
         }
+        LOGGER.info(responseString);
         if (responseString.equals("")){
             response = new ResponseEntity(HttpStatus.CONFLICT);
         } else {

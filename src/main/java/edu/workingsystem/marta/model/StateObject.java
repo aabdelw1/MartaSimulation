@@ -1,12 +1,20 @@
 package edu.workingsystem.marta.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class StateObject {
 
+    @JsonProperty("stopid")
     private int stopId;
+    @JsonProperty("passengersAtStop")
     private int passengersAtStop;
+    @JsonProperty("busid")
     private int busId;
+    @JsonProperty("hasbus")
     private boolean hasBus;
+    @JsonProperty("passengersOnBus")
     private int passngersOnBus;
+    @JsonProperty("passengerCapacity")
     private int passengerCapacity;
 
     public StateObject(int stopId) {
@@ -39,5 +47,17 @@ public class StateObject {
 
     public void setPassengerCapacity(int passengerCapacity) {
         this.passengerCapacity = passengerCapacity;
+    }
+
+    @Override
+    public String toString() {
+        return "StateObject{" +
+                "stopId=" + stopId +
+                ", passengersAtStop=" + passengersAtStop +
+                ", busId=" + busId +
+                ", hasBus=" + hasBus +
+                ", passngersOnBus=" + passngersOnBus +
+                ", passengerCapacity=" + passengerCapacity +
+                '}';
     }
 }
