@@ -16,8 +16,9 @@ public class DiscreteEventSimulator {
     private MultipartFile configFileCopy;
     private MultipartFile probabilityFileCopy;
 
-    static ArrayList<PriorityQueue<Event>> lastThreeEvents = new ArrayList<>();
-    static ArrayList<ArrayList<Integer>> allOutput = new ArrayList<>();
+    private ArrayList<PriorityQueue<Event>> lastThreeEvents;
+    private ArrayList<ArrayList<Integer>> allOutput;
+    private ArrayList<SystemStateResponse> lastThreeResponses;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscreteEventSimulator.class);
 
@@ -25,6 +26,9 @@ public class DiscreteEventSimulator {
         this.transitSystem = new MassTransitSystem();
         this.comp = new EventComparator();
         this.eventQueue = new PriorityQueue(capacity, this.comp);
+        this.lastThreeEvents = new ArrayList<>();
+        this.allOutput = new ArrayList<>();
+        this.lastThreeResponses = new ArrayList<>();
     }
 
 
@@ -158,6 +162,7 @@ public class DiscreteEventSimulator {
 
     public SystemStateResponse moveBus() {
 
+        SystemStateResponse response = new SystemStateResponse();
         PriorityQueue<Event> copy = copyQueue();
 
         if(lastThreeEvents.size() <=3) {
@@ -223,29 +228,34 @@ public class DiscreteEventSimulator {
                     currentState.add(nextStop.getStopId());
                     currentState.add(activeBus.getArrivalTime());
 
-
+                    response = getCurrentState(result);
                     if(allOutput.size() <=3) {
                         allOutput.add(currentState);
+                        lastThreeResponses.add(response);
                     }
                     else {
                         allOutput.remove(0);
                         allOutput.add(currentState);
+                        lastThreeResponses.remove(0);
+                        lastThreeResponses.add(response);
                     }
                 }
             }
-        return getCurrentState(result);
+        return response;
     }
 
     public SystemStateResponse rewind() {
 
+        SystemStateResponse response;
         String result = "";
         if(lastThreeEvents.size() > 0) {
             PriorityQueue<Event> lastState;
-            ArrayList<Integer> lastStateValues = new ArrayList<>();
+            ArrayList<Integer> lastStateValues;
             int lastStateIndex = lastThreeEvents.size()-1;
 
             lastState = lastThreeEvents.get(lastStateIndex);
             lastStateValues = allOutput.get(lastStateIndex);
+            response = lastThreeResponses.get(lastStateIndex);
 
             this.eventQueue = lastState;
 
@@ -253,10 +263,12 @@ public class DiscreteEventSimulator {
             LOGGER.info(result);
             lastThreeEvents.remove(lastState);
             allOutput.remove(lastStateValues);
-
+            lastThreeResponses.remove(response);
+        } else {
+            response = getCurrentState(result);
         }
 
-        return getCurrentState(result);
+        return response;
 
     }
 
