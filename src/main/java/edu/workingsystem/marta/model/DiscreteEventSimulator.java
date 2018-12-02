@@ -3,8 +3,6 @@ package edu.workingsystem.marta.model;
 import edu.workingsystem.marta.util.EventComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -17,6 +15,9 @@ public class DiscreteEventSimulator {
     private PriorityQueue<Event> eventQueue;
     private MultipartFile configFileCopy;
     private MultipartFile probabilityFileCopy;
+
+    static ArrayList<PriorityQueue<Event>> lastThreeEvents = new ArrayList<>();
+    static ArrayList<ArrayList<Integer>> allOutput = new ArrayList<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscreteEventSimulator.class);
 
@@ -156,11 +157,23 @@ public class DiscreteEventSimulator {
     }
 
     public SystemStateResponse moveBus() {
+
+        PriorityQueue<Event> copy = copyQueue();
+
+        if(lastThreeEvents.size() <=3) {
+            lastThreeEvents.add(copy);
+        }
+        else {
+            lastThreeEvents.remove(0);
+            lastThreeEvents.add(copy);
+        }
+
         String result = "";
             if (eventQueue.size() > 0) {
                 Event event = (Event)eventQueue.poll();
 
                 if ("move_bus".equals(event.getEvent_type())) {
+                    ArrayList<Integer> currentState = new ArrayList<>();
                     // Bus to be moved
                     Integer busId = event.getEventId();
                     Bus activeBus = transitSystem.getBuses().get(busId);
@@ -205,13 +218,46 @@ public class DiscreteEventSimulator {
 
                     result = "b:" + activeBus.getBusId() + "->s:" + nextStop.getStopId() + "@"+ activeBus.getArrivalTime() + "//p:0/f:0";
                     LOGGER.info(result);
+
+                    currentState.add(activeBus.getBusId());
+                    currentState.add(nextStop.getStopId());
+                    currentState.add(activeBus.getArrivalTime());
+
+
+                    if(allOutput.size() <=3) {
+                        allOutput.add(currentState);
+                    }
+                    else {
+                        allOutput.remove(0);
+                        allOutput.add(currentState);
+                    }
                 }
             }
         return getCurrentState(result);
     }
 
     public SystemStateResponse rewind() {
-        return null;
+
+        String result = "";
+        if(lastThreeEvents.size() > 0) {
+            PriorityQueue<Event> lastState;
+            ArrayList<Integer> lastStateValues = new ArrayList<>();
+            int lastStateIndex = lastThreeEvents.size()-1;
+
+            lastState = lastThreeEvents.get(lastStateIndex);
+            lastStateValues = allOutput.get(lastStateIndex);
+
+            this.eventQueue = lastState;
+
+            result = "b:" + lastStateValues.get(0) + "->s:" + lastStateValues.get(1) + "@"+ lastStateValues.get(2) + "//p:0/f:0";
+            LOGGER.info(result);
+            lastThreeEvents.remove(lastState);
+            allOutput.remove(lastStateValues);
+
+        }
+
+        return getCurrentState(result);
+
     }
 
     private SystemStateResponse getCurrentState(String lastEventString) {
@@ -257,6 +303,14 @@ public class DiscreteEventSimulator {
         systemStateResponse.setLastEventString(lastEventString);
 
         return systemStateResponse;
+    }
+
+    private PriorityQueue<Event> copyQueue() {
+        PriorityQueue<Event> copy = new PriorityQueue<>(this.eventQueue.size(), this.comp);
+        for (Event e: this.eventQueue){
+            copy.add(e);
+        }
+        return copy;
     }
 
     public SystemStateResponse reset() {
