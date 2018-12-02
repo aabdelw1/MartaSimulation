@@ -278,24 +278,26 @@ public class DiscreteEventSimulator {
 
             stopsWithBus.add(stopId);
 
-            StateObject state = new StateObject(stopId);
+            StateObject state = new StateObject(String.valueOf(stopId), stop.getStopName());
             if (null!=stop.getWaiting()) {
-                state.setPassengersAtStop(stop.getWaiting());
+                state.setPassengersAtStop(String.valueOf(stop.getWaiting()));
             } else {
-                state.setPassengersAtStop(0);
+                state.setPassengersAtStop(String.valueOf(0));
             }
             state.setHasBus(true);
-            state.setBusId(bus.getBusId());
-            state.setPassngersOnBus(bus.getCurrentPassengerCount());
-            state.setPassengerCapacity(bus.getMaxPassengerCount());
+            state.setBusId(String.valueOf(bus.getBusId()));
+            state.setPassngersOnBus(String.valueOf(bus.getCurrentPassengerCount()));
+            state.setPassengerCapacity(String.valueOf(bus.getMaxPassengerCount()));
+            state.setRouteId(String.valueOf(routeId));
+            state.setSpeed(String.valueOf(bus.getSpeed()));
             systemStateResponse.addState(state);
         }
 
         // Add the stops without buses
         for (Stop stop: stops.values()){
             if (!stopsWithBus.contains(stop.getStopId())) {
-                StateObject state = new StateObject(stop.getStopId());
-                state.setPassengersAtStop(stop.getWaiting());
+                StateObject state = new StateObject(String.valueOf(stop.getStopId()), stop.getStopName());
+                state.setPassengersAtStop(String.valueOf(stop.getWaiting()));
                 systemStateResponse.addState(state);
             }
         }

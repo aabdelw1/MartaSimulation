@@ -2,6 +2,7 @@ package edu.workingsystem.marta.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +14,7 @@ public interface EventSimController {
 
     @ApiOperation(value = "Start the simulation by receiving the path to the scenario file and the probability parameter file",
         response = String.class)
-    @RequestMapping(value = "/start/", method = RequestMethod.POST)
+    @RequestMapping(value = "/start/", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<String> startSim(@RequestParam("configList") MultipartFile[] configList);
 
     @ApiOperation(value = "Process the next event in the simulation", response = String.class)
