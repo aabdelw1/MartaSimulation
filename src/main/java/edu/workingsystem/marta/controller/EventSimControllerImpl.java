@@ -102,4 +102,14 @@ public class EventSimControllerImpl implements EventSimController {
         }
         return response;
     }
+
+    @Override
+    public ResponseEntity<Boolean> updateBus(String busId, String routeId, String speed) {
+        int bid = Integer.parseInt(busId);
+        int rid = Integer.parseInt(routeId);
+        int spd = Integer.parseInt(speed);
+        Boolean updated = this.eventSimService.updateBus(bid, rid, spd);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
 }

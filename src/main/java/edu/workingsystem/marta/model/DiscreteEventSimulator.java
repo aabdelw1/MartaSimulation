@@ -337,4 +337,24 @@ public class DiscreteEventSimulator {
         }
         return stateResponse;
     }
+
+    public Boolean updateBus(int bid, int rid, int spd) {
+        HashMap<Integer, Bus> buses = this.transitSystem.getBuses();
+        HashMap<Integer, Route> routes = this.transitSystem.getRoutes();
+
+        boolean response = true;
+
+        if (!buses.containsKey(bid) || !routes.containsKey(rid)){
+            response = false;
+        }
+
+        Bus bus = buses.get(bid);
+        bus.setRouteId(rid);
+        bus.setSpeed(spd);
+
+        buses.put(bid, bus);
+        this.transitSystem.setBuses(buses);
+
+        return response;
+    }
 }

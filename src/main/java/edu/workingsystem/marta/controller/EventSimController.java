@@ -1,5 +1,6 @@
 package edu.workingsystem.marta.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -29,5 +30,9 @@ public interface EventSimController {
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
     ResponseEntity<String> reset();
 
+    @ApiOperation(value = "Update bus", response = Boolean.class)
+    @RequestMapping(value = "/updateBus/{busId}/{routeId}/{speed}", method = RequestMethod.GET)
+    ResponseEntity<Boolean> updateBus(@RequestParam("busId") String busId, @RequestParam("routeId") String routeId,
+                                      @RequestParam("speed") String speed);
 
 }

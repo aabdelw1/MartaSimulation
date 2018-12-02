@@ -29,4 +29,8 @@ public class EventSimService {
     public SystemStateResponse reset() {
         return this.discreteEventSimulator.reset();
     }
+
+    public Boolean updateBus(int bid, int rid, int spd) {
+        return this.discreteEventSimulator.updateBus(bid, rid, spd);
+    }
 }
