@@ -343,10 +343,8 @@ public class DiscreteEventSimulator {
         HashMap<Integer, Bus> buses = this.transitSystem.getBuses();
         HashMap<Integer, Route> routes = this.transitSystem.getRoutes();
 
-        boolean response = true;
-
         if (!buses.containsKey(bid) || !routes.containsKey(rid)){
-            response = false;
+            return false;
         }
 
         Bus bus = buses.get(bid);
@@ -362,7 +360,7 @@ public class DiscreteEventSimulator {
         buses.put(bid, bus);
         this.transitSystem.setBuses(buses);
 
-        return response;
+        return true;
     }
 
     private String calculateEfficiency() {
