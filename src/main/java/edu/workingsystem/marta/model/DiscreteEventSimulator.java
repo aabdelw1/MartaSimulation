@@ -19,6 +19,14 @@ public class DiscreteEventSimulator {
     private ArrayList<PriorityQueue<Event>> lastThreeEvents;
     private ArrayList<ArrayList<Integer>> allOutput;
     private ArrayList<SystemStateResponse> lastThreeResponses;
+    
+    private static  Integer K_SPEED=1;
+    private static  Integer K_CAPACITY=1;
+    private static  Integer K_WAITING=1;
+    private static  Integer K_BUSES=1;
+    private static  Integer K_COMBINED=1;
+    
+    
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscreteEventSimulator.class);
 
@@ -31,6 +39,7 @@ public class DiscreteEventSimulator {
         this.lastThreeResponses = new ArrayList<>();
     }
 
+    
 
     public SystemStateResponse startSim(MultipartFile configFile, MultipartFile probabilityFile) {
 
@@ -364,6 +373,21 @@ public class DiscreteEventSimulator {
     }
 
     private String calculateEfficiency() {
-        return "testing UI";
+       Integer totalWaitingPassengers=0;
+       Integer busCost=0;
+       
+       HashMap<Integer, Stop> stopMap= this.transitSystem.getStops();
+       HashMap<Integer, Bus> busMap= this.transitSystem.getBuses();
+       
+       for(Bus bus:busMap.values()) {
+    	   busCost+=(K_SPEED*bus.getSpeed())+(K_CAPACITY*bus.getMaxPassengerCount());
+       }
+       for(Stop stop:stopMap.values()) {
+    	   totalWaitingPassengers+=stop.getWaiting();
+       }
+       
+       Integer systemEfficiency=0;
+       systemEfficiency=(K_WAITING*totalWaitingPassengers)+(K_BUSES*busCost)+K_COMBINED*totalWaitingPassengers*busCost;
+       return systemEfficiency.toString();
     }
 }
