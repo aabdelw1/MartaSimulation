@@ -14,8 +14,8 @@ public class EventSimService {
         this.discreteEventSimulator = new DiscreteEventSimulator(50);
     }
 
-    public SystemStateResponse startSim(MultipartFile scenarioFile, MultipartFile probabilityFile) {
-        return this.discreteEventSimulator.startSim(scenarioFile, probabilityFile);
+    public SystemStateResponse startSim(MultipartFile scenarioFile, MultipartFile probabilityFile, String kspd, String kcap, String kwait, String kbus, String kcomb) {
+        return this.discreteEventSimulator.startSim(scenarioFile, probabilityFile, 1, 1, 1, 1, 1);
     }
 
     public SystemStateResponse processEvent() {

@@ -26,10 +26,10 @@ public class EventSimControllerImpl implements EventSimController {
     }
 
     @Override
-    public ResponseEntity<String> startSim(@RequestParam("configList") MultipartFile[] configList) {
+    public ResponseEntity<String> startSim(@RequestParam("configList") MultipartFile[] configList, @RequestParam("kspd") String kspd, @RequestParam("kcap") String kcap, @RequestParam("kwait") String kwait, @RequestParam("kbus") String kbus, @RequestParam("kcomb") String kcomb) {
         ResponseEntity<String> response;
         ObjectMapper objectMapper = new ObjectMapper();
-        SystemStateResponse state = this.eventSimService.startSim(configList[0], configList[1]);
+        SystemStateResponse state = this.eventSimService.startSim(configList[0], configList[1], kspd, kcap, kwait, kbus, kcomb);
         String responseString = "";
         try {
            responseString = objectMapper.writeValueAsString(state);

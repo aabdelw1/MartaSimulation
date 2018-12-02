@@ -20,13 +20,11 @@ public class DiscreteEventSimulator {
     private ArrayList<ArrayList<Integer>> allOutput;
     private ArrayList<SystemStateResponse> lastThreeResponses;
     
-    private static  Integer K_SPEED=1;
-    private static  Integer K_CAPACITY=1;
-    private static  Integer K_WAITING=1;
-    private static  Integer K_BUSES=1;
-    private static  Integer K_COMBINED=1;
-    
-    
+    private Integer K_SPEED;
+    private Integer K_CAPACITY;
+    private Integer K_WAITING;
+    private Integer K_BUSES;
+    private Integer K_COMBINED;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscreteEventSimulator.class);
 
@@ -39,9 +37,14 @@ public class DiscreteEventSimulator {
         this.lastThreeResponses = new ArrayList<>();
     }
 
-    
+    public SystemStateResponse startSim(MultipartFile configFile, MultipartFile probabilityFile, int kspd, int kcap, int kwait, int kbus, int k_COMBINED) {
 
-    public SystemStateResponse startSim(MultipartFile configFile, MultipartFile probabilityFile) {
+        this.K_SPEED = kspd;
+        this.K_CAPACITY = kcap;
+        this.K_BUSES = kbus;
+        this.K_WAITING = kwait;
+        this.K_COMBINED = k_COMBINED;
+
 
         this.configFileCopy = configFile;
         this.probabilityFileCopy = probabilityFile;
@@ -343,7 +346,7 @@ public class DiscreteEventSimulator {
             stateResponse = new SystemStateResponse();
             stateResponse.setLastEventString("Missing Config or Probability Files");
         } else {
-            stateResponse = startSim(this.configFileCopy, this.probabilityFileCopy);
+            stateResponse = startSim(this.configFileCopy, this.probabilityFileCopy, this.K_SPEED, this.K_CAPACITY, this.K_WAITING, this.K_BUSES, this.K_COMBINED);
         }
         return stateResponse;
     }

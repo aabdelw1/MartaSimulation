@@ -1,12 +1,15 @@
 package edu.workingsystem.marta.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @CrossOrigin
 @RequestMapping("/")
@@ -15,8 +18,8 @@ public interface EventSimController {
 
     @ApiOperation(value = "Start the simulation by receiving the path to the scenario file and the probability parameter file",
         response = String.class)
-    @RequestMapping(value = "/start/", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<String> startSim(@RequestParam("configList") MultipartFile[] configList);
+    @RequestMapping(value = "/start/{kspd}/{kcap}/{kwait}/{kbus}/{kcomb}", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<String> startSim(@RequestParam("configList") MultipartFile[] configList, @RequestParam("kspd") String kspd, @RequestParam("kcap") String kcap, @RequestParam("kwait") String kwait, @RequestParam("kbus") String kbus, @RequestParam("kcomb") String kcomb);
 
     @ApiOperation(value = "Process the next event in the simulation", response = String.class)
     @RequestMapping(value = "/processEvent", method = RequestMethod.GET)
