@@ -31,8 +31,8 @@ public interface EventSimController {
     ResponseEntity<String> reset();
 
     @ApiOperation(value = "Update bus", response = Boolean.class)
-    @RequestMapping(value = "/updateBus/{busId}/{routeId}/{speed}", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateBus/{busId}/{routeId}/{speed}/{capacity}", method = RequestMethod.GET)
     ResponseEntity<Boolean> updateBus(@RequestParam("busId") String busId, @RequestParam("routeId") String routeId,
-                                      @RequestParam("speed") String speed);
+                                      @RequestParam("speed") String speed, @RequestParam("capacity") String capacity);
 
 }

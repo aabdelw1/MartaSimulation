@@ -11,6 +11,8 @@ public class SystemStateResponse {
     private List<StateObject> stateList;
     @JsonProperty("lastEventString")
     private String lastEventString;
+    @JsonProperty("systemEfficiency")
+    private String efficiency;
 
     public SystemStateResponse(){
         this.stateList = new ArrayList();
@@ -22,6 +24,10 @@ public class SystemStateResponse {
 
     public void setLastEventString(String lastEventString) {
         this.lastEventString = lastEventString;
+    }
+
+    public void setEfficiency(String efficiency) {
+        this.efficiency = efficiency;
     }
 
     @Override

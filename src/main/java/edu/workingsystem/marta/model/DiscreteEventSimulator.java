@@ -315,6 +315,7 @@ public class DiscreteEventSimulator {
         }
 
         systemStateResponse.setLastEventString(lastEventString);
+        systemStateResponse.setEfficiency(calculateEfficiency());
 
         return systemStateResponse;
     }
@@ -338,7 +339,7 @@ public class DiscreteEventSimulator {
         return stateResponse;
     }
 
-    public Boolean updateBus(int bid, int rid, int spd) {
+    public Boolean updateBus(int bid, int rid, int spd, int capacity) {
         HashMap<Integer, Bus> buses = this.transitSystem.getBuses();
         HashMap<Integer, Route> routes = this.transitSystem.getRoutes();
 
@@ -352,9 +353,19 @@ public class DiscreteEventSimulator {
         bus.setRouteId(rid);
         bus.setSpeed(spd);
 
+        if (bus.getCurrentPassengerCount() > capacity){
+            bus.setCurrentPassengerCount(capacity);
+        }
+
+        bus.setMaxPassengerCount(capacity);
+
         buses.put(bid, bus);
         this.transitSystem.setBuses(buses);
 
         return response;
+    }
+
+    private String calculateEfficiency() {
+        return "testing UI";
     }
 }

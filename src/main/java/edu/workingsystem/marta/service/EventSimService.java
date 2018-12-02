@@ -30,7 +30,7 @@ public class EventSimService {
         return this.discreteEventSimulator.reset();
     }
 
-    public Boolean updateBus(int bid, int rid, int spd) {
-        return this.discreteEventSimulator.updateBus(bid, rid, spd);
+    public Boolean updateBus(int bid, int rid, int spd, int capacity) {
+        return this.discreteEventSimulator.updateBus(bid, rid, spd, capacity);
     }
 }
