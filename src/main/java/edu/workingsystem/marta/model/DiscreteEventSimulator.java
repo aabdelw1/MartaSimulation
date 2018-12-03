@@ -20,11 +20,11 @@ public class DiscreteEventSimulator {
     private ArrayList<ArrayList<Integer>> allOutput;
     private ArrayList<SystemStateResponse> lastThreeResponses;
     
-    private Integer K_SPEED;
-    private Integer K_CAPACITY;
-    private Integer K_WAITING;
-    private Integer K_BUSES;
-    private Integer K_COMBINED;
+    private Double K_SPEED;
+    private Double K_CAPACITY;
+    private Double K_WAITING;
+    private Double K_BUSES;
+    private Double K_COMBINED;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscreteEventSimulator.class);
 
@@ -37,7 +37,7 @@ public class DiscreteEventSimulator {
         this.lastThreeResponses = new ArrayList<>();
     }
 
-    public SystemStateResponse startSim(MultipartFile configFile, MultipartFile probabilityFile, int kspd, int kcap, int kwait, int kbus, int k_COMBINED) {
+    public SystemStateResponse startSim(MultipartFile configFile, MultipartFile probabilityFile, double kspd, double kcap, double kwait, double kbus, double k_COMBINED) {
 
         this.K_SPEED = kspd;
         this.K_CAPACITY = kcap;
@@ -233,12 +233,13 @@ public class DiscreteEventSimulator {
                     transitSystem.getBuses().put(busId, activeBus);
                     eventQueue.add(new Event(nextArrivalTime.intValue(), "move_bus", event.getEventId().intValue()));
 
-                    result = "b:" + activeBus.getBusId() + "->s:" + nextStop.getStopId() + "@"+ activeBus.getArrivalTime() + "//p:0/f:0";
+                    result = "b:" + activeBus.getBusId() + "->s:" + nextStop.getStopId() + "@"+ activeBus.getArrivalTime() + "//p:" + activeBus.getCurrentPassengerCount() + "/f:0";
                     LOGGER.info(result);
 
                     currentState.add(activeBus.getBusId());
                     currentState.add(nextStop.getStopId());
                     currentState.add(activeBus.getArrivalTime());
+                    currentState.add(activeBus.getCurrentPassengerCount());
 
                     response = getCurrentState(result);
                     if(allOutput.size() <=3) {
@@ -260,18 +261,18 @@ public class DiscreteEventSimulator {
 
         SystemStateResponse response;
         String result = "";
-        if(lastThreeEvents.size() > 0) {
+        int lastStateIndex = lastThreeEvents.size()-1;
+
+        if(lastThreeEvents.size() > 0 && lastStateIndex != 0) {
             PriorityQueue<Event> lastState;
             ArrayList<Integer> lastStateValues;
-            int lastStateIndex = lastThreeEvents.size()-1;
-
-            lastState = lastThreeEvents.get(lastStateIndex);
-            lastStateValues = allOutput.get(lastStateIndex);
-            response = lastThreeResponses.get(lastStateIndex);
+            lastState = lastThreeEvents.get(lastStateIndex - 1);
+            lastStateValues = allOutput.get(lastStateIndex - 1);
+            response = lastThreeResponses.get(lastStateIndex - 1);
 
             this.eventQueue = lastState;
 
-            result = "b:" + lastStateValues.get(0) + "->s:" + lastStateValues.get(1) + "@"+ lastStateValues.get(2) + "//p:0/f:0";
+            result = "b:" + lastStateValues.get(0) + "->s:" + lastStateValues.get(1) + "@"+ lastStateValues.get(2) + "//p:" + lastStateValues.get(3) + "/f:0";
             LOGGER.info(result);
             lastThreeEvents.remove(lastState);
             allOutput.remove(lastStateValues);
@@ -376,8 +377,8 @@ public class DiscreteEventSimulator {
     }
 
     private String calculateEfficiency() {
-       Integer totalWaitingPassengers=0;
-       Integer busCost=0;
+       Double totalWaitingPassengers=0.0;
+       Double busCost=0.0;
        
        HashMap<Integer, Stop> stopMap= this.transitSystem.getStops();
        HashMap<Integer, Bus> busMap= this.transitSystem.getBuses();
@@ -389,7 +390,7 @@ public class DiscreteEventSimulator {
     	   totalWaitingPassengers+=stop.getWaiting();
        }
        
-       Integer systemEfficiency=0;
+       Double systemEfficiency;
        systemEfficiency=(K_WAITING*totalWaitingPassengers)+(K_BUSES*busCost)+K_COMBINED*totalWaitingPassengers*busCost;
        return systemEfficiency.toString();
     }
